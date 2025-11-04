@@ -21,30 +21,34 @@ import { AlertCircle } from "lucide-react"
 
 interface LockFuelEntryDialogProps {
   entryId: string
+  isLocked: boolean
   children: React.ReactNode
 }
 
-export function LockFuelEntryDialog({ entryId, children }: LockFuelEntryDialogProps) {
-  const [isLocking, setIsLocking] = useState(false)
+export function LockFuelEntryDialog({ entryId, isLocked, children }: LockFuelEntryDialogProps) {
+  const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
-  const handleLock = async () => {
-    setIsLocking(true)
+  const handleToggleLock = async () => {
+    setIsProcessing(true)
     setError(null)
 
     const supabase = createClient()
 
     try {
-      const { error: updateError } = await supabase.from("fuel_entries").update({ is_locked: true }).eq("id", entryId)
+      const { error: updateError } = await supabase
+        .from("fuel_entries")
+        .update({ is_locked: !isLocked })
+        .eq("id", entryId)
 
       if (updateError) throw updateError
 
       router.refresh()
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to lock entry")
+      setError(err instanceof Error ? err.message : `Failed to ${isLocked ? "unlock" : "lock"} entry`)
     } finally {
-      setIsLocking(false)
+      setIsProcessing(false)
     }
   }
 
@@ -53,10 +57,11 @@ export function LockFuelEntryDialog({ entryId, children }: LockFuelEntryDialogPr
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Lock Fuel Entry</AlertDialogTitle>
+          <AlertDialogTitle>{isLocked ? "Unlock" : "Lock"} Fuel Entry</AlertDialogTitle>
           <AlertDialogDescription>
-            Locking this entry will prevent it from being edited or deleted. This is useful when you&apos;ve verified
-            the information is correct. This action cannot be undone.
+            {isLocked
+              ? "Unlocking this entry will allow it to be edited or deleted again."
+              : "Locking this entry will prevent it from being edited or deleted. This is useful when you've verified the information is correct. You can unlock it later if needed."}
           </AlertDialogDescription>
         </AlertDialogHeader>
         {error && (
@@ -66,9 +71,9 @@ export function LockFuelEntryDialog({ entryId, children }: LockFuelEntryDialogPr
           </Alert>
         )}
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={isLocking}>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleLock} disabled={isLocking}>
-            {isLocking ? "Locking..." : "Lock Entry"}
+          <AlertDialogCancel disabled={isProcessing}>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={handleToggleLock} disabled={isProcessing}>
+            {isProcessing ? `${isLocked ? "Unlocking" : "Locking"}...` : `${isLocked ? "Unlock" : "Lock"} Entry`}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

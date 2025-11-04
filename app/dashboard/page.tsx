@@ -23,7 +23,7 @@ export default async function DashboardPage() {
     <div className="flex min-h-svh flex-col">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between">
+        <div className="container max-w-7xl mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/dashboard" className="flex items-center gap-2">
             <Car className="h-6 w-6 text-primary" />
             <span className="text-xl font-bold">FuelLog</span>
@@ -33,13 +33,15 @@ export default async function DashboardPage() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1 container py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground mt-2">Manage your vehicles and track fuel consumption</p>
-        </div>
+      <main className="flex-1 w-full">
+        <div className="container max-w-7xl mx-auto py-6 sm:py-8 px-4 sm:px-6 lg:px-8">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+            <p className="text-muted-foreground mt-2">Manage your vehicles and track fuel consumption</p>
+          </div>
 
-        <VehicleList userId={user.id} />
+          <VehicleList userId={user.id} />
+        </div>
       </main>
     </div>
   )

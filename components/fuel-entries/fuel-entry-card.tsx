@@ -32,10 +32,10 @@ export function FuelEntryCard({ entry, previousEntry }: FuelEntryCardProps) {
   return (
     <Card className={entry.is_locked ? "border-primary/50" : ""}>
       <CardHeader>
-        <div className="flex items-start justify-between">
-          <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-muted-foreground" />
+        <div className="flex items-start justify-between gap-4">
+          <div className="space-y-1 flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <Calendar className="h-4 w-4 text-muted-foreground flex-shrink-0" />
               <span className="font-semibold">{format(new Date(entry.entry_date), "dd MMM yyyy")}</span>
               {entry.is_locked && (
                 <Badge variant="secondary" className="gap-1">
@@ -52,17 +52,15 @@ export function FuelEntryCard({ entry, previousEntry }: FuelEntryCardProps) {
             </div>
             <p className="text-sm text-muted-foreground">Odometer: {entry.odometer_reading.toLocaleString()} km</p>
           </div>
-          <div className="flex items-center gap-2">
-            {!entry.is_locked && (
-              <LockFuelEntryDialog entryId={entry.id}>
-                <Button variant="ghost" size="icon">
-                  <Unlock className="h-4 w-4" />
-                </Button>
-              </LockFuelEntryDialog>
-            )}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <LockFuelEntryDialog entryId={entry.id} isLocked={entry.is_locked}>
+              <Button variant="ghost" size="icon" title={entry.is_locked ? "Unlock entry" : "Lock entry"}>
+                {entry.is_locked ? <Lock className="h-4 w-4" /> : <Unlock className="h-4 w-4" />}
+              </Button>
+            </LockFuelEntryDialog>
             {!entry.is_locked && (
               <DeleteFuelEntryDialog entryId={entry.id} onDelete={() => setIsDeleting(true)}>
-                <Button variant="ghost" size="icon" disabled={isDeleting}>
+                <Button variant="ghost" size="icon" disabled={isDeleting} title="Delete entry">
                   <Trash2 className="h-4 w-4" />
                 </Button>
               </DeleteFuelEntryDialog>
@@ -73,38 +71,38 @@ export function FuelEntryCard({ entry, previousEntry }: FuelEntryCardProps) {
       <CardContent className="space-y-4">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 flex-shrink-0">
               <Droplet className="h-5 w-5 text-primary" />
             </div>
-            <div>
+            <div className="min-w-0">
               <p className="text-sm text-muted-foreground">Liters</p>
               <p className="font-semibold">{entry.liters.toFixed(2)} L</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 flex-shrink-0">
               <DollarSign className="h-5 w-5 text-primary" />
             </div>
-            <div>
+            <div className="min-w-0">
               <p className="text-sm text-muted-foreground">Total Cost</p>
               <p className="font-semibold">R {entry.total_cost.toFixed(2)}</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 flex-shrink-0">
               <DollarSign className="h-5 w-5 text-primary" />
             </div>
-            <div>
+            <div className="min-w-0">
               <p className="text-sm text-muted-foreground">Price/Liter</p>
               <p className="font-semibold">R {entry.price_per_liter.toFixed(2)}</p>
             </div>
           </div>
           {consumption !== null && (
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-500/10">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-500/10 flex-shrink-0">
                 <Droplet className="h-5 w-5 text-green-600" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <p className="text-sm text-muted-foreground">Consumption</p>
                 <p className="font-semibold text-green-600">{consumption.toFixed(2)} km/L</p>
               </div>
@@ -127,19 +125,19 @@ export function FuelEntryCard({ entry, previousEntry }: FuelEntryCardProps) {
 
         {entry.petrol_station_name && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <MapPin className="h-4 w-4" />
-            <span>{entry.petrol_station_name}</span>
+            <MapPin className="h-4 w-4 flex-shrink-0" />
+            <span className="break-words">{entry.petrol_station_name}</span>
           </div>
         )}
 
         {entry.receipt_url && (
           <div className="flex items-center gap-2 text-sm">
-            <ImageIcon className="h-4 w-4 text-muted-foreground" />
+            <ImageIcon className="h-4 w-4 text-muted-foreground flex-shrink-0" />
             <a
               href={entry.receipt_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary hover:underline"
+              className="text-primary hover:underline break-all"
             >
               View Receipt
             </a>

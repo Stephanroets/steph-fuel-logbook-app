@@ -41,11 +41,22 @@ export async function FuelEntryList({ vehicleId, userId }: FuelEntryListProps) {
   }
 
   return (
-    <div className="space-y-4">
-      {entries.map((entry, index) => {
-        const previousEntry = entries[index + 1]
-        return <FuelEntryCard key={entry.id} entry={entry} previousEntry={previousEntry} />
-      })}
+    <div className="space-y-6">
+      <div className="space-y-4">
+        {entries.map((entry, index) => {
+          const previousEntry = entries[index + 1]
+          return <FuelEntryCard key={entry.id} entry={entry} previousEntry={previousEntry} />
+        })}
+      </div>
+
+      <div className="flex justify-center pt-4">
+        <AddFuelEntryDialog vehicleId={vehicleId}>
+          <Button size="lg" className="w-full sm:w-auto">
+            <Plus className="mr-2 h-5 w-5" />
+            Add Another Entry
+          </Button>
+        </AddFuelEntryDialog>
+      </div>
     </div>
   )
 }
