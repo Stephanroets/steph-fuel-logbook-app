@@ -17,6 +17,22 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
+    if (
+      !process.env.AWS_REGION ||
+      !process.env.AWS_ACCESS_KEY_ID ||
+      !process.env.AWS_SECRET_ACCESS_KEY ||
+      !process.env.AWS_S3_BUCKET_NAME
+    ) {
+      console.error("[v0] Missing AWS environment variables")
+      return NextResponse.json(
+        {
+          error:
+            "AWS configuration incomplete. Please check your environment variables in the Vars section of the sidebar.",
+        },
+        { status: 500 },
+      )
+    }
+
     const formData = await request.formData()
     const file = formData.get("file") as File
 
@@ -40,18 +56,28 @@ export async function POST(request: NextRequest) {
     const timestamp = Date.now()
     const filename = `receipts/${user.id}/${timestamp}.avif`
 
-    // Upload to S3
-    const uploadCommand = new PutObjectCommand({
-      Bucket: S3_BUCKET_NAME,
-      Key: filename,
-      Body: avifBuffer,
-      ContentType: "image/avif",
-    })
+    try {
+      // Upload to S3
+      const uploadCommand = new PutObjectCommand({
+        Bucket: S3_BUCKET_NAME,
+        Key: filename,
+        Body: avifBuffer,
+        ContentType: "image/avif",
+      })
 
-    await s3Client.send(uploadCommand)
+      await s3Client.send(uploadCommand)
+    } catch (s3Error) {
+      console.error("[v0] S3 upload error:", s3Error)
+      return NextResponse.json(
+        {
+          error: "Failed to upload to S3. Please verify your AWS credentials and bucket configuration.",
+        },
+        { status: 500 },
+      )
+    }
 
     // Generate public URL
-    const url = `https://${S3_BUCKET_NAME}.s3.${process.env.AWS_REGION || "us-east-1"}.amazonaws.com/${filename}`
+    const url = `https://${S3_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${filename}`
 
     return NextResponse.json({ url })
   } catch (error) {
