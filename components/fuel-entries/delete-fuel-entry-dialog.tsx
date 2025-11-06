@@ -21,29 +21,42 @@ import { AlertCircle } from "lucide-react"
 
 interface DeleteFuelEntryDialogProps {
   entryId: string
+  isLocked: boolean
   children: React.ReactNode
   onDelete?: () => void
 }
 
-export function DeleteFuelEntryDialog({ entryId, children, onDelete }: DeleteFuelEntryDialogProps) {
+export function DeleteFuelEntryDialog({ entryId, isLocked, children, onDelete }: DeleteFuelEntryDialogProps) {
   const [isDeleting, setIsDeleting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [open, setOpen] = useState(false)
   const router = useRouter()
 
   const handleDelete = async () => {
+    if (isLocked) {
+      setError("Cannot delete a locked entry. Please unlock it first.")
+      return
+    }
+
     setIsDeleting(true)
     setError(null)
 
     const supabase = createClient()
 
     try {
+      console.log("[v0] Attempting to delete entry:", { entryId, isLocked })
+
       const { error: deleteError } = await supabase.from("fuel_entries").delete().eq("id", entryId)
+
+      console.log("[v0] Delete result:", { error: deleteError })
 
       if (deleteError) throw deleteError
 
       onDelete?.()
+      setOpen(false)
       router.refresh()
     } catch (err) {
+      console.error("[v0] Delete error:", err)
       setError(err instanceof Error ? err.message : "Failed to delete entry")
     } finally {
       setIsDeleting(false)
@@ -51,7 +64,7 @@ export function DeleteFuelEntryDialog({ entryId, children, onDelete }: DeleteFue
   }
 
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>

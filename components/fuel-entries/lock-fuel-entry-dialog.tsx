@@ -28,6 +28,7 @@ interface LockFuelEntryDialogProps {
 export function LockFuelEntryDialog({ entryId, isLocked, children }: LockFuelEntryDialogProps) {
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [open, setOpen] = useState(false)
   const router = useRouter()
 
   const handleToggleLock = async () => {
@@ -37,15 +38,22 @@ export function LockFuelEntryDialog({ entryId, isLocked, children }: LockFuelEnt
     const supabase = createClient()
 
     try {
-      const { error: updateError } = await supabase
+      console.log("[v0] Toggling lock state:", { entryId, currentState: isLocked, newState: !isLocked })
+
+      const { data, error: updateError } = await supabase
         .from("fuel_entries")
         .update({ is_locked: !isLocked })
         .eq("id", entryId)
+        .select()
+
+      console.log("[v0] Lock update result:", { data, error: updateError })
 
       if (updateError) throw updateError
 
+      setOpen(false)
       router.refresh()
     } catch (err) {
+      console.error("[v0] Lock toggle error:", err)
       setError(err instanceof Error ? err.message : `Failed to ${isLocked ? "unlock" : "lock"} entry`)
     } finally {
       setIsProcessing(false)
@@ -53,7 +61,7 @@ export function LockFuelEntryDialog({ entryId, isLocked, children }: LockFuelEnt
   }
 
   return (
-    <AlertDialog>
+    <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -61,7 +69,7 @@ export function LockFuelEntryDialog({ entryId, isLocked, children }: LockFuelEnt
           <AlertDialogDescription>
             {isLocked
               ? "Unlocking this entry will allow it to be edited or deleted again."
-              : "Locking this entry will prevent it from being edited or deleted. This is useful when you've verified the information is correct. You can unlock it later if needed."}
+              : "Locking this entry will prevent it from being deleted. This is useful when you've verified the information is correct. You can unlock it later if needed."}
           </AlertDialogDescription>
         </AlertDialogHeader>
         {error && (

@@ -29,6 +29,12 @@ export function FuelEntryCard({ entry, previousEntry }: FuelEntryCardProps) {
     }
   }
 
+  console.log("[v0] Rendering fuel entry card:", {
+    entryId: entry.id,
+    isLocked: entry.is_locked,
+    showDeleteButton: !entry.is_locked,
+  })
+
   return (
     <Card className={entry.is_locked ? "border-primary/50" : ""}>
       <CardHeader>
@@ -59,7 +65,7 @@ export function FuelEntryCard({ entry, previousEntry }: FuelEntryCardProps) {
               </Button>
             </LockFuelEntryDialog>
             {!entry.is_locked && (
-              <DeleteFuelEntryDialog entryId={entry.id} onDelete={() => setIsDeleting(true)}>
+              <DeleteFuelEntryDialog entryId={entry.id} isLocked={entry.is_locked} onDelete={() => setIsDeleting(true)}>
                 <Button variant="ghost" size="icon" disabled={isDeleting} title="Delete entry">
                   <Trash2 className="h-4 w-4" />
                 </Button>
