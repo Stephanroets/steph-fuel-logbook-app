@@ -41,22 +41,21 @@ export function LockFuelEntryDialog({ entryId, isLocked, children }: LockFuelEnt
       const newLockState = !isLocked
       console.log("[v0] Toggling lock state:", { entryId, currentState: isLocked, newState: newLockState })
 
-      const { data, error: updateError } = await supabase
-        .from("fuel_entries")
-        .update({ is_locked: newLockState })
-        .eq("id", entryId)
-        .select()
+      const { data, error: updateError } = await supabase.rpc("toggle_fuel_entry_lock", {
+        entry_id: entryId,
+        new_lock_state: newLockState,
+      })
 
       console.log("[v0] Lock update result:", { data, error: updateError })
 
       if (updateError) {
-        if (updateError.message.includes("policy")) {
+        if (updateError.message.includes("permission") || updateError.message.includes("not found")) {
           throw new Error("You don't have permission to modify this entry.")
         }
         throw updateError
       }
 
-      if (!data || data.length === 0) {
+      if (!data) {
         throw new Error("Failed to update entry. Please try again.")
       }
 
