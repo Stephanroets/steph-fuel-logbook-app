@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "FuelLog - Track Your Fuel Consumption",
   description:
     "Monitor your vehicle fuel efficiency, manage expenses in South African Rand, and keep detailed records for SARS tax purposes.",
-  generator: "v0.app",
+    generator: 'v0.app'
 }
 
 export default function RootLayout({

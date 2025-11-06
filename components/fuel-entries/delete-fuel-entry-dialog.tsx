@@ -44,11 +44,11 @@ export function DeleteFuelEntryDialog({ entryId, isLocked, children, onDelete }:
     const supabase = createClient()
 
     try {
-      console.log("[v0] Attempting to delete entry:", { entryId, isLocked })
+      console.log("Attempting to delete entry:", { entryId, isLocked })
 
       const { error: deleteError } = await supabase.from("fuel_entries").delete().eq("id", entryId)
 
-      console.log("[v0] Delete result:", { error: deleteError })
+      console.log("Delete result:", { error: deleteError })
 
       if (deleteError) throw deleteError
 
@@ -56,7 +56,7 @@ export function DeleteFuelEntryDialog({ entryId, isLocked, children, onDelete }:
       setOpen(false)
       router.refresh()
     } catch (err) {
-      console.error("[v0] Delete error:", err)
+      console.error("Delete error:", err)
       setError(err instanceof Error ? err.message : "Failed to delete entry")
     } finally {
       setIsDeleting(false)

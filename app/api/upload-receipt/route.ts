@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
       !process.env.AWS_SECRET_ACCESS_KEY ||
       !process.env.AWS_S3_BUCKET_NAME
     ) {
-      console.error("[v0] Missing AWS environment variables")
+      console.error("Missing AWS environment variables")
       return NextResponse.json(
         {
           error:
@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
 
       await s3Client.send(uploadCommand)
     } catch (s3Error) {
-      console.error("[v0] S3 upload error:", s3Error)
+      console.error("S3 upload error:", s3Error)
       return NextResponse.json(
         {
           error: "Failed to upload to S3. Please verify your AWS credentials and bucket configuration.",
@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ url })
   } catch (error) {
-    console.error("[v0] Upload error:", error)
+    console.error("Upload error:", error)
     return NextResponse.json({ error: error instanceof Error ? error.message : "Upload failed" }, { status: 500 })
   }
 }

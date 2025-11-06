@@ -38,7 +38,7 @@ export function LockFuelEntryDialog({ entryId, isLocked, children }: LockFuelEnt
     const supabase = createClient()
 
     try {
-      console.log("[v0] Toggling lock state:", { entryId, currentState: isLocked, newState: !isLocked })
+      console.log("Toggling lock state:", { entryId, currentState: isLocked, newState: !isLocked })
 
       const { data, error: updateError } = await supabase
         .from("fuel_entries")
@@ -46,14 +46,14 @@ export function LockFuelEntryDialog({ entryId, isLocked, children }: LockFuelEnt
         .eq("id", entryId)
         .select()
 
-      console.log("[v0] Lock update result:", { data, error: updateError })
+      console.log("Lock update result:", { data, error: updateError })
 
       if (updateError) throw updateError
 
       setOpen(false)
       router.refresh()
     } catch (err) {
-      console.error("[v0] Lock toggle error:", err)
+      console.error("Lock toggle error:", err)
       setError(err instanceof Error ? err.message : `Failed to ${isLocked ? "unlock" : "lock"} entry`)
     } finally {
       setIsProcessing(false)

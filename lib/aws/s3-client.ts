@@ -7,7 +7,7 @@ const AWS_S3_BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME
 
 // Validate environment variables
 if (!AWS_REGION || !AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY || !AWS_S3_BUCKET_NAME) {
-  console.error("[v0] Missing AWS environment variables:", {
+  console.error("Missing AWS environment variables:", {
     AWS_REGION: AWS_REGION ? "✓" : "✗",
     AWS_ACCESS_KEY_ID: AWS_ACCESS_KEY_ID ? "✓" : "✗",
     AWS_SECRET_ACCESS_KEY: AWS_SECRET_ACCESS_KEY ? "✓" : "✗",

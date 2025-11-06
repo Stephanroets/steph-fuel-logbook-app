@@ -114,7 +114,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid export method" }, { status: 400 })
     }
   } catch (error) {
-    console.error("[v0] Export error:", error)
+    console.error("Export error:", error)
     return NextResponse.json({ error: error instanceof Error ? error.message : "Export failed" }, { status: 500 })
   }
 }
