@@ -38,22 +38,34 @@ export function LockFuelEntryDialog({ entryId, isLocked, children }: LockFuelEnt
     const supabase = createClient()
 
     try {
-      console.log("Toggling lock state:", { entryId, currentState: isLocked, newState: !isLocked })
+      const newLockState = !isLocked
+      console.log("[v0] Toggling lock state:", { entryId, currentState: isLocked, newState: newLockState })
 
       const { data, error: updateError } = await supabase
         .from("fuel_entries")
-        .update({ is_locked: !isLocked })
+        .update({ is_locked: newLockState })
         .eq("id", entryId)
         .select()
 
-      console.log("Lock update result:", { data, error: updateError })
+      console.log("[v0] Lock update result:", { data, error: updateError })
 
-      if (updateError) throw updateError
+      if (updateError) {
+        if (updateError.message.includes("policy")) {
+          throw new Error("You don't have permission to modify this entry.")
+        }
+        throw updateError
+      }
+
+      if (!data || data.length === 0) {
+        throw new Error("Failed to update entry. Please try again.")
+      }
+
+      console.log("[v0] Lock state successfully updated to:", newLockState)
 
       setOpen(false)
       router.refresh()
     } catch (err) {
-      console.error("Lock toggle error:", err)
+      console.error("[v0] Lock toggle error:", err)
       setError(err instanceof Error ? err.message : `Failed to ${isLocked ? "unlock" : "lock"} entry`)
     } finally {
       setIsProcessing(false)

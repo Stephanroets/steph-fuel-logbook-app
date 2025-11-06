@@ -44,19 +44,40 @@ export function DeleteFuelEntryDialog({ entryId, isLocked, children, onDelete }:
     const supabase = createClient()
 
     try {
-      console.log("Attempting to delete entry:", { entryId, isLocked })
+      console.log("[v0] Attempting to delete entry:", { entryId, isLocked })
+
+      const { data: currentEntry, error: fetchError } = await supabase
+        .from("fuel_entries")
+        .select("is_locked")
+        .eq("id", entryId)
+        .single()
+
+      console.log("[v0] Current entry lock status from DB:", { currentEntry, fetchError })
+
+      if (fetchError) {
+        throw new Error(`Failed to verify entry status: ${fetchError.message}`)
+      }
+
+      if (currentEntry?.is_locked) {
+        throw new Error("This entry is locked and cannot be deleted. Please unlock it first.")
+      }
 
       const { error: deleteError } = await supabase.from("fuel_entries").delete().eq("id", entryId)
 
-      console.log("Delete result:", { error: deleteError })
+      console.log("[v0] Delete result:", { error: deleteError })
 
-      if (deleteError) throw deleteError
+      if (deleteError) {
+        if (deleteError.message.includes("policy")) {
+          throw new Error("Cannot delete this entry. It may be locked or you don't have permission.")
+        }
+        throw deleteError
+      }
 
       onDelete?.()
       setOpen(false)
       router.refresh()
     } catch (err) {
-      console.error("Delete error:", err)
+      console.error("[v0] Delete error:", err)
       setError(err instanceof Error ? err.message : "Failed to delete entry")
     } finally {
       setIsDeleting(false)
