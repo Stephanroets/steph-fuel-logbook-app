@@ -3,11 +3,12 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Calendar, Droplet, DollarSign, MapPin, Briefcase, Lock, Unlock, Trash2, ImageIcon } from "lucide-react"
+import { Calendar, Droplet, DollarSign, MapPin, Briefcase, Lock, Unlock, Trash2, ImageIcon, Pencil } from "lucide-react"
 import type { FuelEntry } from "@/lib/types/database"
 import { format } from "date-fns"
 import { DeleteFuelEntryDialog } from "./delete-fuel-entry-dialog"
 import { LockFuelEntryDialog } from "./lock-fuel-entry-dialog"
+import { EditFuelEntryDialog } from "./edit-fuel-entry-dialog"
 import { useState } from "react"
 
 interface FuelEntryCardProps {
@@ -64,6 +65,13 @@ export function FuelEntryCard({ entry, previousEntry }: FuelEntryCardProps) {
                 {entry.is_locked ? <Lock className="h-4 w-4" /> : <Unlock className="h-4 w-4" />}
               </Button>
             </LockFuelEntryDialog>
+            {!entry.is_locked && (
+              <EditFuelEntryDialog entry={entry}>
+                <Button variant="ghost" size="icon" title="Edit entry">
+                  <Pencil className="h-4 w-4" />
+                </Button>
+              </EditFuelEntryDialog>
+            )}
             {!entry.is_locked && (
               <DeleteFuelEntryDialog entryId={entry.id} isLocked={entry.is_locked} onDelete={() => setIsDeleting(true)}>
                 <Button variant="ghost" size="icon" disabled={isDeleting} title="Delete entry">
