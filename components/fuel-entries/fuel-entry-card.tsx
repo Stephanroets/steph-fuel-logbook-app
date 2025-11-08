@@ -113,12 +113,12 @@ export function FuelEntryCard({ entry, previousEntry }: FuelEntryCardProps) {
           </div>
           {consumption !== null && (
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-500/10 flex-shrink-0">
-                <Droplet className="h-5 w-5 text-green-600" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/20 flex-shrink-0">
+                <Droplet className="h-5 w-5 text-accent" />
               </div>
               <div className="min-w-0">
                 <p className="text-sm text-muted-foreground">Consumption</p>
-                <p className="font-semibold text-green-600">{consumption.toFixed(2)} km/L</p>
+                <p className="font-semibold text-accent">{consumption.toFixed(2)} km/L</p>
               </div>
             </div>
           )}
