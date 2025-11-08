@@ -20,6 +20,8 @@ interface AnalyticsData {
 }
 
 async function calculateAnalytics(entries: FuelEntry[]): Promise<AnalyticsData> {
+  console.log("[v0] Calculating analytics for entries:", entries.length)
+
   if (entries.length === 0) {
     return {
       averageConsumption: null,
@@ -55,6 +57,14 @@ async function calculateAnalytics(entries: FuelEntry[]): Promise<AnalyticsData> 
       totalConsumption += consumption
       consumptionCount++
       totalDistance += distance
+
+      console.log("[v0] Consumption calculation:", {
+        currentEntry: current.id,
+        previousEntry: previous.id,
+        distance,
+        liters: current.liters,
+        consumption: consumption.toFixed(2),
+      })
     }
 
     totalSpent += current.total_cost
@@ -75,6 +85,14 @@ async function calculateAnalytics(entries: FuelEntry[]): Promise<AnalyticsData> 
   const averageConsumption = consumptionCount > 0 ? totalConsumption / consumptionCount : null
   const averagePricePerLiter = totalLiters > 0 ? totalSpent / totalLiters : 0
   const lastFillDate = sortedEntries[sortedEntries.length - 1].entry_date
+
+  console.log("[v0] Final analytics:", {
+    averageConsumption: averageConsumption?.toFixed(2),
+    totalSpent: totalSpent.toFixed(2),
+    totalLiters: totalLiters.toFixed(2),
+    totalDistance,
+    consumptionCount,
+  })
 
   return {
     averageConsumption,
@@ -97,6 +115,8 @@ export async function VehicleAnalytics({ vehicleId, userId }: VehicleAnalyticsPr
     .eq("vehicle_id", vehicleId)
     .eq("user_id", userId)
     .order("entry_date", { ascending: true })
+
+  console.log("[v0] Fetched entries for analytics:", entries?.length || 0)
 
   const analytics = await calculateAnalytics(entries || [])
 

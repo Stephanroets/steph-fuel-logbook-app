@@ -107,6 +107,14 @@ export function EditFuelEntryDialog({ entry, children }: EditFuelEntryDialogProp
       } = await supabase.auth.getUser()
       if (!user) throw new Error("Not authenticated")
 
+      console.log("[v0] Starting fuel entry update:", {
+        entryId: entry.id,
+        isLocked: entry.is_locked,
+        newLiters: formData.liters,
+        newPricePerLiter: formData.price_per_liter,
+        newTotalCost: totalCost,
+      })
+
       // Check if entry is locked
       if (entry.is_locked) {
         throw new Error("Cannot edit a locked entry. Please unlock it first.")
@@ -138,26 +146,44 @@ export function EditFuelEntryDialog({ entry, children }: EditFuelEntryDialogProp
         receiptUrl = null
       }
 
-      const { error: updateError } = await supabase
-        .from("fuel_entries")
-        .update({
-          entry_date: formData.entry_date,
-          odometer_reading: Number.parseFloat(formData.odometer_reading),
-          liters: Number.parseFloat(formData.liters),
-          price_per_liter: Number.parseFloat(formData.price_per_liter),
-          total_cost: Number.parseFloat(totalCost),
-          petrol_station_name: formData.petrol_station_name || null,
-          is_work_travel: formData.is_work_travel,
-          work_km: formData.is_work_travel && formData.work_km ? Number.parseFloat(formData.work_km) : null,
-          receipt_url: receiptUrl,
-        })
-        .eq("id", entry.id)
+      const updateData = {
+        entry_date: formData.entry_date,
+        odometer_reading: Number.parseFloat(formData.odometer_reading),
+        liters: Number.parseFloat(formData.liters),
+        price_per_liter: Number.parseFloat(formData.price_per_liter),
+        total_cost: Number.parseFloat(totalCost),
+        petrol_station_name: formData.petrol_station_name || null,
+        is_work_travel: formData.is_work_travel,
+        work_km: formData.is_work_travel && formData.work_km ? Number.parseFloat(formData.work_km) : null,
+        receipt_url: receiptUrl,
+        updated_at: new Date().toISOString(),
+      }
 
-      if (updateError) throw updateError
+      console.log("[v0] Updating fuel entry with data:", updateData)
+
+      const { data: updatedEntry, error: updateError } = await supabase
+        .from("fuel_entries")
+        .update(updateData)
+        .eq("id", entry.id)
+        .select()
+        .single()
+
+      if (updateError) {
+        console.error("[v0] Failed to update fuel entry:", updateError)
+        throw updateError
+      }
+
+      console.log("[v0] Successfully updated fuel entry:", updatedEntry)
 
       setOpen(false)
+
       router.refresh()
+
+      setTimeout(() => {
+        window.location.reload()
+      }, 100)
     } catch (err) {
+      console.error("[v0] Error updating fuel entry:", err)
       setError(err instanceof Error ? err.message : "Failed to update fuel entry")
       setIsUploading(false)
     } finally {
