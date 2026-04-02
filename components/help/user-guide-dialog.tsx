@@ -37,29 +37,29 @@ export function UserGuideDialog({ children }: UserGuideDialogProps) {
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[85vh]">
+      <DialogContent className="max-w-4xl max-h-[85vh] w-[95vw] sm:w-full">
         <DialogHeader>
-          <DialogTitle className="text-2xl">FuelLog User Guide</DialogTitle>
-          <DialogDescription>
+          <DialogTitle className="text-lg sm:text-2xl">FuelLog User Guide</DialogTitle>
+          <DialogDescription className="text-xs sm:text-sm">
             Everything you need to know about tracking your vehicle&apos;s fuel consumption
           </DialogDescription>
         </DialogHeader>
-        <ScrollArea className="h-[calc(85vh-120px)] pr-4">
+        <ScrollArea className="h-[calc(85vh-120px)] pr-2 sm:pr-4">
           <Tabs defaultValue="getting-started" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
-              <TabsTrigger value="getting-started">Getting Started</TabsTrigger>
-              <TabsTrigger value="vehicles">Vehicles</TabsTrigger>
-              <TabsTrigger value="fuel-logs">Fuel Logs</TabsTrigger>
-              <TabsTrigger value="features">Features</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 h-auto gap-1 p-1">
+              <TabsTrigger value="getting-started" className="text-xs sm:text-sm px-2 py-2">Getting Started</TabsTrigger>
+              <TabsTrigger value="vehicles" className="text-xs sm:text-sm px-2 py-2">Vehicles</TabsTrigger>
+              <TabsTrigger value="fuel-logs" className="text-xs sm:text-sm px-2 py-2">Fuel Logs</TabsTrigger>
+              <TabsTrigger value="features" className="text-xs sm:text-sm px-2 py-2">Features</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="getting-started" className="space-y-4 mt-4">
-              <div className="rounded-lg border p-6 bg-muted/50">
-                <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                  <Car className="h-5 w-5 text-primary" />
+            <TabsContent value="getting-started" className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
+              <div className="rounded-lg border p-3 sm:p-6 bg-muted/50">
+                <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3 flex items-center gap-2">
+                  <Car className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
                   Welcome to FuelLog!
                 </h3>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-xs sm:text-sm text-muted-foreground mb-3 sm:mb-4">
                   FuelLog helps you track your vehicle&apos;s fuel consumption, manage expenses, and keep records for tax purposes. This guide will walk you through everything step-by-step.
                 </p>
               </div>
