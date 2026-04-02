@@ -4,6 +4,7 @@ import { UserNav } from "@/components/user-nav"
 import { Car } from "lucide-react"
 import Link from "next/link"
 import { VehicleList } from "@/components/vehicles/vehicle-list"
+import { WelcomeBanner } from "@/components/help/welcome-banner"
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -18,6 +19,10 @@ export default async function DashboardPage() {
 
   // Fetch user profile
   const { data: profile } = await supabase.from("profiles").select("*").eq("id", user.id).single()
+
+  // Check if user has vehicles for welcome banner
+  const { data: vehicles } = await supabase.from("vehicles").select("id").eq("user_id", user.id).limit(1)
+  const hasVehicles = vehicles && vehicles.length > 0
 
   return (
     <div className="flex min-h-svh flex-col">
@@ -39,6 +44,8 @@ export default async function DashboardPage() {
             <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
             <p className="text-muted-foreground mt-2">Manage your vehicles and track fuel consumption</p>
           </div>
+
+          <WelcomeBanner hasVehicles={hasVehicles} />
 
           <VehicleList userId={user.id} />
         </div>

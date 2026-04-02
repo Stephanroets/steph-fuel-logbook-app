@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/label"
 import { createClient } from "@/lib/supabase/client"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AlertCircle } from "lucide-react"
+import { HelpTooltip } from "@/components/help/help-tooltip"
 
 interface AddVehicleDialogProps {
   children: React.ReactNode
@@ -86,7 +87,10 @@ export function AddVehicleDialog({ children }: AddVehicleDialogProps) {
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="make">Make</Label>
+              <div className="flex items-center gap-2">
+                <Label htmlFor="make">Make</Label>
+                <HelpTooltip content="The manufacturer of your vehicle (e.g., Toyota, Ford, BMW, Volkswagen)" />
+              </div>
               <Input
                 id="make"
                 placeholder="e.g., Toyota"
@@ -97,7 +101,10 @@ export function AddVehicleDialog({ children }: AddVehicleDialogProps) {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="model">Model</Label>
+              <div className="flex items-center gap-2">
+                <Label htmlFor="model">Model</Label>
+                <HelpTooltip content="The specific model of your vehicle (e.g., Corolla, Ranger, Polo)" />
+              </div>
               <Input
                 id="model"
                 placeholder="e.g., Corolla"
@@ -108,7 +115,10 @@ export function AddVehicleDialog({ children }: AddVehicleDialogProps) {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="year">Year</Label>
+              <div className="flex items-center gap-2">
+                <Label htmlFor="year">Year</Label>
+                <HelpTooltip content="The year your vehicle was manufactured" />
+              </div>
               <Input
                 id="year"
                 type="number"
@@ -121,7 +131,10 @@ export function AddVehicleDialog({ children }: AddVehicleDialogProps) {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="registration">Registration Number</Label>
+              <div className="flex items-center gap-2">
+                <Label htmlFor="registration">Registration Number</Label>
+                <HelpTooltip content="Your vehicle's license plate number (e.g., ABC123GP)" />
+              </div>
               <Input
                 id="registration"
                 placeholder="e.g., ABC123GP"

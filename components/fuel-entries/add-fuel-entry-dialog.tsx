@@ -20,6 +20,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { createClient } from "@/lib/supabase/client"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { AlertCircle, X, Loader2 } from "lucide-react"
+import { HelpTooltip } from "@/components/help/help-tooltip"
 
 interface AddFuelEntryDialogProps {
   vehicleId: string
@@ -164,7 +165,10 @@ export function AddFuelEntryDialog({ vehicleId, children }: AddFuelEntryDialogPr
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="odometer_reading">Odometer Reading (km)</Label>
+              <div className="flex items-center gap-2">
+                <Label htmlFor="odometer_reading">Odometer Reading (km)</Label>
+                <HelpTooltip content="The total kilometers shown on your vehicle's dashboard. This is crucial for calculating fuel efficiency." />
+              </div>
               <Input
                 id="odometer_reading"
                 type="number"
@@ -177,7 +181,10 @@ export function AddFuelEntryDialog({ vehicleId, children }: AddFuelEntryDialogPr
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="liters">Liters</Label>
+              <div className="flex items-center gap-2">
+                <Label htmlFor="liters">Liters</Label>
+                <HelpTooltip content="How many liters of fuel you purchased. Check your receipt or the pump display." />
+              </div>
               <Input
                 id="liters"
                 type="number"
@@ -190,7 +197,10 @@ export function AddFuelEntryDialog({ vehicleId, children }: AddFuelEntryDialogPr
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="price_per_liter">Price per Liter (ZAR)</Label>
+              <div className="flex items-center gap-2">
+                <Label htmlFor="price_per_liter">Price per Liter (ZAR)</Label>
+                <HelpTooltip content="The cost per liter in South African Rand. You'll find this on your receipt or the pump." />
+              </div>
               <Input
                 id="price_per_liter"
                 type="number"
@@ -263,10 +273,14 @@ export function AddFuelEntryDialog({ vehicleId, children }: AddFuelEntryDialogPr
               <Label htmlFor="is_work_travel" className="cursor-pointer">
                 This is work travel (for SARS)
               </Label>
+              <HelpTooltip content="Tick this if you used fuel for business purposes (client meetings, work sites, etc.). This helps you track expenses for tax deductions." />
             </div>
             {formData.is_work_travel && (
               <div className="grid gap-2">
-                <Label htmlFor="work_km">Work Travel Distance (km)</Label>
+                <div className="flex items-center gap-2">
+                  <Label htmlFor="work_km">Work Travel Distance (km)</Label>
+                  <HelpTooltip content="Enter the number of kilometers you drove for work purposes during this tank of fuel." />
+                </div>
                 <Input
                   id="work_km"
                   type="number"

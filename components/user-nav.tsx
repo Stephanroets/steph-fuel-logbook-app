@@ -12,8 +12,9 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
-import { LogOut, User } from "lucide-react"
+import { LogOut, User, HelpCircle } from "lucide-react"
 import { ThemeToggle } from "./theme-toggle"
+import { UserGuideDialog } from "./help/user-guide-dialog"
 
 interface UserNavProps {
   user: {
@@ -43,6 +44,11 @@ export function UserNav({ user }: UserNavProps) {
 
   return (
     <div className="flex items-center gap-2">
+      <UserGuideDialog>
+        <Button variant="ghost" size="sm">
+          <HelpCircle className="h-4 w-4" />
+        </Button>
+      </UserGuideDialog>
       <ThemeToggle />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
