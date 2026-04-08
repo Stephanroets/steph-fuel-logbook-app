@@ -12,7 +12,18 @@ export const metadata: Metadata = {
   title: "FuelLog - Track Your Fuel Consumption",
   description:
     "Monitor your vehicle fuel efficiency, manage expenses in South African Rand, and keep detailed records for SARS tax purposes.",
-    generator: 'v0.app'
+  generator: 'v0.app',
+  icons: {
+    icon: [
+      { url: '/fuel/favicon.ico', sizes: '32x32' },
+      { url: '/fuel/favicon.svg', type: 'image/svg+xml' },
+      { url: '/fuel/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/fuel/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
+  manifest: '/fuel/site.webmanifest',
 }
 
 export default function RootLayout({
