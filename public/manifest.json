@@ -1,0 +1,25 @@
+{
+  "name": "FuelLog - Track Your Fuel Consumption",
+  "short_name": "FuelLog",
+  "description": "Monitor your vehicle fuel efficiency, manage expenses, and keep detailed records for SARS tax purposes",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "display": "standalone",
+  "orientation": "portrait",
+  "start_url": "/",
+  "scope": "/"
+}
