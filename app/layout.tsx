@@ -40,7 +40,7 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="192x192" href="/android-chrome-192x192.png" />
         <link rel="icon" type="image/png" sizes="512x512" href="/android-chrome-512x512.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/fuel/apple-touch-icon.png" />
-        <meta name="theme-color" content="#000000" />
+        <meta name="theme-color" content="#ffffff" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="application-name" content="FuelLog" />
       </head>
